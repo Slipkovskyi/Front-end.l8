@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Таймери зворотного відліку</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+
+        .timer {
+            margin: 20px;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="timer" id="timer1">
+    <p id="timer1Display">02:00:00</p>
+    <button onclick="startTimer('timer1', 7200)">Старт</button>
+    <button onclick="stopTimer('timer1')">Стоп</button>
+    <button onclick="resetTimer('timer1', 7200)">Скидання</button>
+</div>
+
+<div class="timer" id="timer2">
+    <p id="timer2Display">00:10:00</p>
+    <button onclick="startTimer('timer2', 600)">Старт</button>
+    <button onclick="stopTimer('timer2')">Стоп</button>
+    <button onclick="resetTimer('timer2', 600)">Скидання</button>
+</div>
+
+<div class="timer" id="timer3">
+    <p id="timer3Display">00:00:30</p>
+    <button onclick="startTimer('timer3', 30)">Старт</button>
+    <button onclick="stopTimer('timer3')">Стоп</button>
+    <button onclick="resetTimer('timer3', 30)">Скидання</button>
+</div>
+
+<script>
+    let timers = {};
+
+    function formatTime(seconds) {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+
+        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function startTimer(timerId, initialSeconds) {
+        if (!timers[timerId]) {
+            timers[timerId] = setInterval(() => {
+                const timerDisplay = document.getElementById(`${timerId}Display`);
+                initialSeconds -= 1;
+
+                if (initialSeconds >= 0) {
+                    timerDisplay.textContent = formatTime(initialSeconds);
+                } else {
+                    clearInterval(timers[timerId]);
+                }
+            }, 1000);
+        }
+    }
+
+    function stopTimer(timerId) {
+        clearInterval(timers[timerId]);
+        timers[timerId] = null;
+    }
+
+    function resetTimer(timerId, initialSeconds) {
+        stopTimer(timerId);
+        const timerDisplay = document.getElementById(`${timerId}Display`);
+        timerDisplay.textContent = formatTime(initialSeconds);
+    }
+</script>
+
+</body>
+</html>

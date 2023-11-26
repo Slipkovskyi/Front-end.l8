@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .block {
+            width: 50px;
+            height: 50px;
+            background-color: red;
+            position: absolute;
+        }
+    </style>
+    <title>Automatic Block Movement</title>
+</head>
+<body>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const blocks = [];
+        const numBlocks = 5;
+
+        // Function to generate a random number within a range
+        function getRandom(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        // Create and initialize blocks
+        for (let i = 0; i < numBlocks; i++) {
+            const block = document.createElement("div");
+            block.className = "block";
+            document.body.appendChild(block);
+            blocks.push({
+                element: block,
+                directionX: Math.random() > 0.5 ? 1 : -1,
+                directionY: Math.random() > 0.5 ? 1 : -1,
+                speed: Math.random() * 3 + 1, // Random speed between 1 and 4
+                x: window.innerWidth / 2,   // Start from the middle of the screen
+                y: window.innerHeight / 2,  // Start from the middle of the screen
+            });
+        }
+
+        // Function to move the blocks
+        function moveBlocks() {
+            blocks.forEach(block => {
+                const rect = block.element.getBoundingClientRect();
+                const windowWidth = window.innerWidth;
+                const windowHeight = window.innerHeight;
+
+                // Check and update direction when reaching window borders
+                if (rect.left <= 0 || rect.right >= windowWidth) {
+                    block.directionX *= -1;
+                }
+                if (rect.top <= 0 || rect.bottom >= windowHeight) {
+                    block.directionY *= -1;
+                }
+
+                // Move the block
+                block.x += block.directionX * block.speed;
+                block.y += block.directionY * block.speed;
+
+                // Update block position
+                block.element.style.left = block.x + "px";
+                block.element.style.top = block.y + "px";
+            });
+
+            // Repeat the movement
+            requestAnimationFrame(moveBlocks);
+        }
+
+        // Start the movement
+        moveBlocks();
+    });
+</script>
+</body>
+</html>
